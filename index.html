@@ -2,14 +2,108 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>TEST SCRIPT</title>
+  <title>Chasse au trésor 🎂</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background:#111;
+      color:white;
+      text-align:center;
+    }
+
+    h1 { margin-top:20px; }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:15px;
+      max-width:600px;
+      margin:30px auto;
+    }
+
+    img {
+      width:100%;
+      border-radius:10px;
+      transition: transform 0.3s;
+    }
+
+    .locked {
+      filter: blur(12px) grayscale(1) brightness(0.5);
+    }
+
+    #counter {
+      font-size:20px;
+      margin-top:20px;
+    }
+
+    /* Animation pop */
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .unlocked-animation {
+      animation: pop 0.5s ease;
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>TEST JAVASCRIPT</h1>
+<h1>🎁 Anniversaire Léa 🎁</h1>
+
+<div class="grid">
+  <img id="img1"  class="locked" src="img1_locked.jpg">
+  <img id="img2"  class="locked" src="img2_locked.jpg">
+  <img id="img3"  class="locked" src="img3_locked.jpg">
+  <img id="img4"  class="locked" src="img4_locked.jpg">
+  <img id="img5"  class="locked" src="img5_locked.jpg">
+  <img id="img6"  class="locked" src="img6_locked.jpg">
+  <img id="img7"  class="locked" src="img7_locked.jpg">
+  <img id="img8"  class="locked" src="img8_locked.jpg">
+  <img id="img9"  class="locked" src="img9_locked.jpg">
+</div>
+
+<img id="img10" class="locked" src="img10_locked.jpg" style="max-width:300px;">
+<img id="img11" class="locked" src="img11_locked.jpg" style="max-width:300px;">
+<img id="img12" class="locked" src="img12_locked.jpg" style="max-width:300px;">
+
+<div id="counter">0 / 12</div>
 
 <script>
-  alert("SCRIPT OK");
+const TOTAL = 12;
+
+// Progression individuelle
+let unlocked = JSON.parse(localStorage.getItem("unlocked")) || [];
+
+// Lire l’URL ?unlock=X
+const params = new URLSearchParams(window.location.search);
+const unlock = params.get("unlock");
+
+if (unlock && !unlocked.includes(unlock)) {
+  unlocked.push(unlock);
+  localStorage.setItem("unlocked", JSON.stringify(unlocked));
+}
+
+// Appliquer les images débloquées
+unlocked.forEach(n => {
+  const img = document.getElementById("img" + n);
+  if (img) {
+    img.src = "img" + n + ".jpg";
+    img.classList.remove("locked");
+
+    img.classList.add("unlocked-animation");
+    img.addEventListener("animationend", () => {
+      img.classList.remove("unlocked-animation");
+    });
+  }
+});
+
+// Compteur
+document.getElementById("counter").innerText =
+  unlocked.length + " / " + TOTAL;
 </script>
 
 </body>
