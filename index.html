@@ -10,7 +10,16 @@
     img { width:100%; border-radius:10px; }
     .locked { filter: blur(12px) grayscale(1) brightness(0.5); }
     #counter { margin-top:20px; font-size:20px; }
-  </style>
+    /* Animation pop quand image déverrouillée */
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.unlocked-animation {
+  animation: pop 0.5s ease;
+}
+   </style>
 </head>
 <body>
 
@@ -51,6 +60,10 @@ unlocked.forEach(n => {
   if (img) {
     img.src = "img" + n + ".jpg";
     img.classList.remove("locked");
+     // Ajoute animation pop
+    img.classList.add("unlocked-animation");
+    img.addEventListener("animationend", () => {
+      img.classList.remove("unlocked-animation");
   }
 });
 
@@ -60,3 +73,4 @@ document.getElementById("counter").innerText =
 
 </body>
 </html>
+
