@@ -24,6 +24,10 @@
       margin: 30px auto;
     }
 
+    .item {
+      text-align: center;
+    }
+
     img {
       width: 100%;
       border-radius: 10px;
@@ -33,15 +37,10 @@
       filter: blur(12px) grayscale(1) brightness(0.5);
     }
 
-    #counter {
-      font-size: 20px;
-      margin-top: 20px;
-    }
-
-    #label {
-      font-size: 24px;
-      margin-top: 15px;
-      min-height: 32px;
+    .label {
+      margin-top: 8px;
+      font-size: 16px;
+      min-height: 22px;
     }
 
     @keyframes pop {
@@ -53,6 +52,11 @@
     .pop {
       animation: pop 0.5s ease;
     }
+
+    #counter {
+      font-size: 20px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 
@@ -61,28 +65,76 @@
 <h1>🎁 Anniversaire Léa 🎁</h1>
 
 <div class="grid">
-  <img id="img1" class="locked" src="img1_locked.jpg">
-  <img id="img2" class="locked" src="img2_locked.jpg">
-  <img id="img3" class="locked" src="img3_locked.jpg">
-  <img id="img4" class="locked" src="img4_locked.jpg">
-  <img id="img5" class="locked" src="img5_locked.jpg">
-  <img id="img6" class="locked" src="img6_locked.jpg">
-  <img id="img7" class="locked" src="img7_locked.jpg">
-  <img id="img8" class="locked" src="img8_locked.jpg">
-  <img id="img9" class="locked" src="img9_locked.jpg">
+
+  <div class="item">
+    <img id="img1" class="locked" src="img1_locked.jpg">
+    <div class="label" id="label1"></div>
+  </div>
+
+  <div class="item">
+    <img id="img2" class="locked" src="img2_locked.jpg">
+    <div class="label" id="label2"></div>
+  </div>
+
+  <div class="item">
+    <img id="img3" class="locked" src="img3_locked.jpg">
+    <div class="label" id="label3"></div>
+  </div>
+
+  <div class="item">
+    <img id="img4" class="locked" src="img4_locked.jpg">
+    <div class="label" id="label4"></div>
+  </div>
+
+  <div class="item">
+    <img id="img5" class="locked" src="img5_locked.jpg">
+    <div class="label" id="label5"></div>
+  </div>
+
+  <div class="item">
+    <img id="img6" class="locked" src="img6_locked.jpg">
+    <div class="label" id="label6"></div>
+  </div>
+
+  <div class="item">
+    <img id="img7" class="locked" src="img7_locked.jpg">
+    <div class="label" id="label7"></div>
+  </div>
+
+  <div class="item">
+    <img id="img8" class="locked" src="img8_locked.jpg">
+    <div class="label" id="label8"></div>
+  </div>
+
+  <div class="item">
+    <img id="img9" class="locked" src="img9_locked.jpg">
+    <div class="label" id="label9"></div>
+  </div>
+
 </div>
 
-<img id="img10" class="locked" src="img10_locked.jpg" style="max-width:300px;">
-<img id="img11" class="locked" src="img11_locked.jpg" style="max-width:300px;">
-<img id="img12" class="locked" src="img12_locked.jpg" style="max-width:300px;">
+<div class="grid">
+  <div class="item">
+    <img id="img10" class="locked" src="img10_locked.jpg">
+    <div class="label" id="label10"></div>
+  </div>
+
+  <div class="item">
+    <img id="img11" class="locked" src="img11_locked.jpg">
+    <div class="label" id="label11"></div>
+  </div>
+
+  <div class="item">
+    <img id="img12" class="locked" src="img12_locked.jpg">
+    <div class="label" id="label12"></div>
+  </div>
+</div>
 
 <div id="counter">0 / 12</div>
-<div id="label"></div>
 
 <script>
 const TOTAL = 12;
 
-/* 🔤 Textes personnalisés */
 const labels = {
   1: "🎈 Début de l’aventure",
   2: "🍰 Indice cuisine",
@@ -99,14 +151,10 @@ const labels = {
 };
 
 let unlocked = JSON.parse(localStorage.getItem("unlocked")) || [];
-let lastUnlocked = localStorage.getItem("lastUnlocked");
 
 const params = new URLSearchParams(window.location.search);
 const unlock = params.get("unlock");
 
-const label = document.getElementById("label");
-
-/* 🔓 Déblocage via QR */
 if (unlock) {
   const n = Number(unlock);
 
@@ -114,37 +162,26 @@ if (unlock) {
     unlocked.push(n);
     localStorage.setItem("unlocked", JSON.stringify(unlocked));
   }
-
-  localStorage.setItem("lastUnlocked", n);
-  lastUnlocked = n;
-
-  /* ⚡ FIX : attendre le rendu DOM */
-  setTimeout(() => {
-    if (labels[n]) {
-      label.textContent = labels[n];
-      label.classList.remove("pop");
-      void label.offsetWidth; // reset animation
-      label.classList.add("pop");
-    }
-  }, 100);
 }
 
-/* 🖼️ Appliquer images débloquées */
+// Appliquer images + texte
 unlocked.forEach(n => {
   const img = document.getElementById("img" + n);
+  const label = document.getElementById("label" + n);
+
   if (img) {
     img.src = "img" + n + ".jpg";
     img.classList.remove("locked");
     img.classList.add("pop");
   }
+
+  if (label && labels[n]) {
+    label.textContent = labels[n];
+    label.classList.add("pop");
+  }
 });
 
-/* 🏷️ Afficher texte même après refresh */
-if (lastUnlocked && labels[lastUnlocked]) {
-  label.textContent = labels[lastUnlocked];
-}
-
-/* 🔢 Compteur */
+// Compteur
 document.getElementById("counter").textContent =
   unlocked.length + " / " + TOTAL;
 </script>
